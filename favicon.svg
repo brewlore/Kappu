@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="13" ry="13" fill="#0A0A0A"/>
+  <g fill="none" stroke="#F5F0E8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top horizontal bar -->
+    <line x1="20" y1="17" x2="38" y2="17" stroke-width="4.5"/>
+    <!-- Right curl upward from top bar -->
+    <path d="M38 17 C44 17 46 13 42 11" stroke-width="4.5"/>
+    <!-- Vertical stem down from top bar -->
+    <line x1="29" y1="17" x2="29" y2="26" stroke-width="4.5"/>
+    <!-- Left hook arm from mid-left -->
+    <path d="M20 26 C15 26 13 31 17 34" stroke-width="4.5"/>
+    <!-- Second horizontal bar -->
+    <line x1="20" y1="26" x2="40" y2="26" stroke-width="4.5"/>
+    <!-- Circle at bottom — the main feature -->
+    <circle cx="32" cy="44" r="9.5" stroke-width="4.5"/>
+  </g>
+</svg>
