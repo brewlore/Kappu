@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kappu · Brew Log</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg"/>
+  <link rel="apple-touch-icon" href="assets/icons/favicon.svg"/>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="src/css/styles.css"/>
+</head>
+<body>
+
+<header>
+  <div class="hi">
+    <div class="eyebrow" style="color:#888888">Single Origin · Tasting Notes</div>
+    <h1>Kappu <em>Brew Log</em></h1>
+    <p class="hdesc">Fill in your brew details and download a .docx log</p>
+  </div>
+</header>
+<nav class="nav-bar" id="section-nav">
+  <div class="nav-inner">
+    <a class="nav-item active" onclick="scrollToSection('meta')">Date</a>
+    <a class="nav-item" onclick="scrollToSection('s01')">01 · Identity</a>
+    <a class="nav-item" onclick="scrollToSection('s02')">02 · Brew Tech</a>
+    <a class="nav-item" onclick="scrollToSection('s03')">03 · Brew Story</a>
+    <a class="nav-item" onclick="scrollToSection('s04')">04 · Sensory</a>
+    <a class="nav-item" onclick="scrollToSection('s05')">05 · Flavour</a>
+    <a class="nav-item" onclick="scrollToSection('s06')">06 · Score</a>
+    <a class="nav-item" onclick="scrollToSection('s07')">07 · Mood</a>
+  </div>
+</nav>
+<main>
+
+<!-- Meta -->
+<div class="meta-row" id="meta">
+  <div class="field"><label>Date</label><input type="date" id="meta-date"/></div>
+  <div class="field"><label>Barista</label><input type="text" id="meta-barista" placeholder="Name"/></div>
+</div>
+
+<!-- 01 Coffee Identity -->
+<div class="section" id="s01">
+  <div class="section-header"><span class="sn">01</span><span class="st">Coffee Identity</span></div>
+  <div class="sb">
+    <div class="g1" style="margin-bottom:16px">
+      <div class="field"><label>Coffee Name</label><input type="text" id="ci-name" placeholder="As named by the roaster"/></div>
+    </div>
+    <div class="g2">
+      <div class="field"><label>Roaster</label><input type="text" id="ci-roaster"/></div>
+      <div class="field"><label>Origin</label><input type="text" id="ci-origin" placeholder="Country / Region"/></div>
+      <div class="field"><label>Altitude</label><input type="text" id="ci-altitude" placeholder="e.g. 1800 masl"/></div>
+      <div class="field"><label>Process</label><input type="text" id="ci-process" placeholder="Washed / Natural…"/></div>
+      <div class="field"><label>Variety</label><input type="text" id="ci-variety" placeholder="e.g. Bourbon, Gesha"/></div>
+      <div class="field"><label>Roast Level</label><input type="text" id="ci-roast-level" placeholder="Light / Medium…"/></div>
+      <div class="field"><label>Roast Date</label><input type="date" id="ci-roast-date" oninput="calcDaysRested()"/></div>
+      <div class="field"><label>Days Rested</label><input type="number" id="ci-rested" placeholder="Auto-calculated" min="0" readonly style="color:var(--text-muted);cursor:default"/></div>
+    </div>
+    <div style="margin-top:16px">
+      <div class="field">
+        <label>Roaster's Tasting Notes</label>
+        <textarea id="ci-tasting-notes" placeholder="As described by the roaster…" style="min-height:60px"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 02 Brew Tech -->
+<div class="section" id="s02">
+  <div class="section-header"><span class="sn">02</span><span class="st">Brew Tech</span></div>
+  <div class="sb">
+    <div class="g2">
+      <div class="field"><label>Brewer</label><input type="text" id="bt-brewer" placeholder="V60, Chemex…"/></div>
+      <div class="field"><label>Filter Type</label><input type="text" id="bt-filter" placeholder="Paper / Metal…"/></div>
+      <div class="field"><label>Dose (g)</label><input type="number" id="bt-dose" placeholder="e.g. 15" step="0.1" oninput="calcBrew('dose')"/></div>
+      <div class="field"><label>Water (g)</label><input type="number" id="bt-water" placeholder="e.g. 250" oninput="calcBrew('water')"/></div>
+      <div class="field"><label>Ratio</label><input type="text" id="bt-ratio" placeholder="e.g. 1:16" oninput="calcBrew('ratio')"/></div>
+      <div class="field"><label>Grind Size</label><input type="text" id="bt-grind" placeholder="e.g. Medium-fine"/></div>
+      <div class="field s2"><label>Total Brew Time</label><input type="text" id="bt-brew-time" placeholder="e.g. 3:30"/></div>
+    </div>
+
+    <div style="margin:20px 0 4px">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px">Brew Type</div>
+      <div class="brew-type-row">
+        <button class="brew-type-btn active" id="bt-hot" onclick="setBrewType('hot')">Hot</button>
+        <button class="brew-type-btn" id="bt-iced" onclick="setBrewType('iced')">Iced</button>
+      </div>
+    </div>
+
+    <div class="ice-fields" id="ice-fields">
+      <div class="g2" style="margin-bottom:20px">
+        <div class="field"><label>Ice in Carafe (g)</label><input type="number" id="bt-ice-carafe" placeholder="e.g. 100"/></div>
+        <div class="field"><label>Ice in Serving Glass (g)</label><input type="number" id="bt-ice-glass" placeholder="e.g. 80"/></div>
+      </div>
+    </div>
+
+    <div class="pours-label">Pours</div>
+    <!-- Bloom / First Pour — fixed -->
+    <div class="pour-block" id="pour-block-0">
+      <div class="pour-name">Bloom / First Pour</div>
+      <div class="pour-row">
+        <div class="field"><label>Quantity (g)</label><input type="number" id="p0-qty" placeholder="e.g. 45" step="0.1"/></div>
+        <div class="field"><label>Water Temp</label><input type="text" id="p0-temp" placeholder="e.g. 93°C"/></div>
+        <div class="field"><label>Pour Type</label><input type="text" id="p0-type" placeholder="Centre / Spiral…"/></div>
+        <div class="field"><label>Time</label><input type="text" id="p0-time" placeholder="e.g. 0:45"/></div>
+        <div class="agit-wrap"><label>Agitation</label><div class="agit-btns">
+          <button class="agit-btn" id="pbloom-yes" onclick="setAgit('bloom','Yes')">Yes</button>
+          <button class="agit-btn" id="pbloom-no"  onclick="setAgit('bloom','No')">No</button>
+        </div></div>
+      </div>
+    </div>
+    <!-- Dynamic pours injected here -->
+    <div id="dynamic-pours"></div>
+    <!-- Add Pour button -->
+    <div id="add-pour-wrap" style="margin-top:14px">
+      <button class="add-pour-btn" onclick="addPour()">+ Add Pour</button>
+    </div>
+  </div>
+</div>
+
+<!-- 03 Brew Story -->
+<div class="section" id="s03">
+  <div class="section-header"><span class="sn">03</span><span class="st">Brew Story</span></div>
+  <div class="sb">
+    <table class="bst">
+      <tr><td class="bsq">Did the bed dome?</td><td><div class="bsa">
+        <button class="bs-btn" id="bs0-yes" onclick="setBs(0,'Yes')">Yes</button>
+        <button class="bs-btn" id="bs0-no"  onclick="setBs(0,'No')">No</button>
+        <button class="bs-btn" id="bs0-un"  onclick="setBs(0,'Unsure')">Unsure</button>
+      </div></td></tr>
+      <tr><td class="bsq">Was bloom aggressive?</td><td><div class="bsa">
+        <button class="bs-btn" id="bs1-yes" onclick="setBs(1,'Yes')">Yes</button>
+        <button class="bs-btn" id="bs1-no"  onclick="setBs(1,'No')">No</button>
+        <button class="bs-btn" id="bs1-un"  onclick="setBs(1,'Unsure')">Unsure</button>
+      </div></td></tr>
+      <tr><td class="bsq">Drawdown</td><td><div class="bsa">
+        <button class="bs-btn" id="bs2-yes" onclick="setBs(2,'Fast')">Fast</button>
+        <button class="bs-btn" id="bs2-no"  onclick="setBs(2,'Choked')">Choked</button>
+        <button class="bs-btn" id="bs2-un"  onclick="setBs(2,'Unsure')">Unsure</button>
+      </div></td></tr>
+      <tr><td class="bsq">Any channeling?</td><td><div class="bsa">
+        <button class="bs-btn" id="bs3-yes" onclick="setBs(3,'Yes')">Yes</button>
+        <button class="bs-btn" id="bs3-no"  onclick="setBs(3,'No')">No</button>
+        <button class="bs-btn" id="bs3-un"  onclick="setBs(3,'Unsure')">Unsure</button>
+      </div></td></tr>
+      <tr><td class="bsq">Any agitation used?</td><td><div class="bsa">
+        <button class="bs-btn" id="bs4-yes" onclick="setBs(4,'Yes')">Yes</button>
+        <button class="bs-btn" id="bs4-no"  onclick="setBs(4,'No')">No</button>
+        <button class="bs-btn" id="bs4-un"  onclick="setBs(4,'Unsure')">Unsure</button>
+      </div></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- 04 Sensory Test -->
+<div class="section" id="s04">
+  <div class="section-header"><span class="sn">04</span><span class="st">Sensory Test</span></div>
+  <div class="sb">
+    <div class="phase-tag">Hot Phase · 0–30 seconds</div>
+    <div class="g1">
+      <div class="field"><label>First Aroma</label><input type="text" id="st-aroma"/></div>
+      <div class="field"><label>Immediate Taste</label><input type="text" id="st-taste"/></div>
+      <div class="field"><label>Texture</label><input type="text" id="st-texture"/></div>
+    </div>
+    <div class="phase-tag">Warm Phase · 30 sec – 3 mins</div>
+    <div class="g1">
+      <div class="field"><label>Dominant Note</label><input type="text" id="st-dominant"/></div>
+      <div class="field"><label>Acidity Quality</label><input type="text" id="st-acidity"/></div>
+      <div class="field"><label>Sweetness</label><input type="text" id="st-sweetness"/></div>
+      <div class="field"><label>Aftertaste</label><input type="text" id="st-aftertaste"/></div>
+    </div>
+    <div class="phase-tag">Cooling Phase · 3+ mins</div>
+    <div class="g1">
+      <div class="field"><label>New Notes Appeared</label><input type="text" id="st-new-notes"/></div>
+      <div class="field"><label>Bitterness Change</label><input type="text" id="st-bitterness"/></div>
+      <div class="field"><label>Structure Shift</label><input type="text" id="st-structure"/></div>
+    </div>
+  </div>
+</div>
+
+<!-- 05 Flavour Notes -->
+<div class="section" id="s05">
+  <div class="section-header"><span class="sn">05</span><span class="st">Flavour Notes</span></div>
+  <div class="sb">
+    <div class="field">
+      <label>What do you taste? Describe freely</label>
+      <textarea id="flavour" placeholder="Chocolate, dried fruit, jasmine…"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- 06 Kappu Score -->
+<div class="section" id="s06">
+  <div class="section-header"><span class="sn">06</span><span class="st">Kappu Score</span></div>
+  <div class="sb">
+    <table class="score-tbl">
+      <tr><td class="slc">Sweetness</td><td><div class="scircles" id="sc-sweetness"></div></td><td class="sval" id="sv-sweetness">–</td></tr>
+      <tr><td class="slc">Acidity Quality</td><td><div class="scircles" id="sc-acidity"></div></td><td class="sval" id="sv-acidity">–</td></tr>
+      <tr><td class="slc">Clarity</td><td><div class="scircles" id="sc-clarity"></div></td><td class="sval" id="sv-clarity">–</td></tr>
+      <tr><td class="slc">Body</td><td><div class="scircles" id="sc-body"></div></td><td class="sval" id="sv-body">–</td></tr>
+      <tr><td class="slc">Balance</td><td><div class="scircles" id="sc-balance"></div></td><td class="sval" id="sv-balance">–</td></tr>
+      <tr><td class="slc">Brew Difficulty</td><td colspan="2">
+        <div class="diff-row">
+          <button class="diff-btn" id="diff-easy"      onclick="setDiff('Easy')">Easy</button>
+          <button class="diff-btn" id="diff-moderate"  onclick="setDiff('Moderate')">Moderate</button>
+          <button class="diff-btn" id="diff-technical" onclick="setDiff('Technical')">Technical</button>
+        </div>
+      </td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- 07 Mood Pairing -->
+<div class="section" id="s07">
+  <div class="section-header"><span class="sn">07</span><span class="st">Mood Pairing</span></div>
+  <div class="sb">
+    <p style="font-size:12px;color:var(--text-light);margin-bottom:14px;font-style:italic">Circle the mood this cup fits</p>
+    <div class="mood-grid">
+      <button class="mood-btn" onclick="this.classList.toggle('active')">Rainy day</button>
+      <button class="mood-btn" onclick="this.classList.toggle('active')">Quiet day</button>
+      <button class="mood-btn" onclick="this.classList.toggle('active')">Reset / Recovery</button>
+      <button class="mood-btn" onclick="this.classList.toggle('active')">Creative day</button>
+      <button class="mood-btn" onclick="this.classList.toggle('active')">Momentum / Work</button>
+      <button class="mood-btn" onclick="this.classList.toggle('active')">Long Conversation</button>
+    </div>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="dl-btn" onclick="generateDocx()">
+    Download Brew Log
+    <span class="dl-sub">.docx · Word / Google Docs</span>
+  </button>
+  <button class="pdf-btn" onclick="printPDF()">
+    Save as PDF
+    <span class="dl-sub" style="color:var(--text-muted)">.pdf · Print / Mobile</span>
+  </button>
+</div>
+<div class="io-row">
+  <button class="io-btn" onclick="openExportModal()">↑ Export</button>
+  <button class="io-btn" onclick="openModal('import-modal')">↓ Import</button>
+</div>
+</main>
+
+<!-- Export modal -->
+<div class="modal-overlay" id="export-modal">
+  <div class="modal">
+    <div class="modal-title">Export Data</div>
+    <div class="modal-sub">Select sections to include in the JSON export</div>
+    <div class="modal-sections" id="export-section-list"></div>
+    <div class="modal-divider"></div>
+    <div class="field" style="margin-bottom:20px">
+      <label style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-muted)">File Name</label>
+      <div style="display:flex;align-items:center;gap:0">
+        <input type="text" id="export-filename" placeholder="kappu-coffee-name" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--accent);background:transparent;border:none;border-bottom:1.5px solid var(--border);padding:6px 2px;outline:none;flex:1;transition:border-color .15s" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"/>
+        <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-muted);padding-bottom:2px;white-space:nowrap">.json</span>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn-cancel" onclick="closeModal('export-modal')">Cancel</button>
+      <button class="modal-btn-primary" onclick="doExport()">Download JSON</button>
+    </div>
+  </div>
+</div>
+
+<!-- Import modal -->
+<div class="modal-overlay" id="import-modal">
+  <div class="modal">
+    <div class="modal-title">Import Data</div>
+    <div class="modal-sub">Load a previously exported Kappu JSON file</div>
+    <div class="import-drop" id="import-drop" onclick="document.getElementById('import-file').click()">
+      <p>Click to select file or drag and drop</p>
+      <p style="margin-top:6px"><span>Browse JSON file</span></p>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImportFile(event)"/>
+    <div class="modal-actions">
+      <button class="modal-btn-cancel" onclick="closeModal('import-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+<footer>Kappu · Every cup tells a story</footer>
+
+  <!-- docx library -->
+  <script src="vendor/docx.umd.js"></script>
+
+  <!-- App -->
+  <script src="src/js/app.js"></script>
+
+</body>
+</html>
